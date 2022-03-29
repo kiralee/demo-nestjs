@@ -1,21 +1,23 @@
 import { Module, CacheModule } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { CategoriesModule } from './categories/categories.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import { UserpermissionModule } from './userpermission/userpermission.module';
+import { UserPermissionModule } from './userpermission/userpermission.module';
 import * as redisStore from 'cache-manager-redis-store';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(),
-    ConfigModule.forRoot({
-      envFilePath: '.env',
-      isGlobal: true,
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: process.env.DATABASE_HOST,
+      port: parseInt(process.env.DATABASE_PORT),
+      username: process.env.DATABASE_ROOT,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_NAME,
+      entities: ['dist/**/*.entity{.ts,.js}'],
+      synchronize: true,
     }),
     CacheModule.register({
       store: redisStore,
@@ -23,12 +25,10 @@ import * as redisStore from 'cache-manager-redis-store';
       port: 6379,
       isGlobal: true,
     }),
-    UsersModule,
     CategoriesModule,
     AuthModule,
-    UserpermissionModule,
+    UsersModule,
+    UserPermissionModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, AuthService],
 })
 export class AppModule {}

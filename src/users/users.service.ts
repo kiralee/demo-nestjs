@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import { LoginUserDto } from './dtos/login-user.dto';
 import { Cache } from 'cache-manager';
 
-@Injectable()
+@Injectable() //use @Injectable annotation allows you to inject instances
 export class UsersService {
   constructor(
     @InjectRepository(User) private usersRepository: Repository<User>,
@@ -31,5 +31,9 @@ export class UsersService {
 
   async signOut(id: number) {
     return await this.cacheManager.del(id.toString());
+  }
+
+  test() {
+    console.log('abc');
   }
 }

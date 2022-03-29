@@ -12,11 +12,13 @@ import {
   UseGuards,
   ParseIntPipe,
   Put,
+  Res,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
-import { JwtGuard } from 'src/auth/jwt.guard';
+import { JwtGuard } from 'src/guard/jwt.guard';
 import { CreateCategoryDto } from './dtos/create-category.dto';
 import { UpdateCategoryDto } from './dtos/update-user.dto';
+import { Response } from 'express';
 
 @ApiTags('category')
 @Controller('category')
@@ -61,24 +63,33 @@ export class CategoriesController {
 
   @UseGuards(JwtGuard)
   @ApiBearerAuth()
-  @Delete('delete-category')
+  @Delete('delete-category/:id')
   @HttpCode(HttpStatus.OK)
-  async deleteCategory(@Param('id', ParseIntPipe) id: number): Promise<object> {
+  async deleteCategory(
+    @Param('id') id: number,
+    @Res() res: Response,
+  ): Promise<object> {
     try {
-      const result = await this.deleteCategory(id);
-      return {
-        message: 'add category success',
-        data: result,
-      };
+      console.log('Id', id);
+      const result = await this.categoriesService.deleteCategory(id);
+      if (result.affected > 0) {
+        return {
+          message: 'Delete category success',
+          data: result,
+        };
+      }
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ message: 'Not found' });
     } catch (error) {
-      console.log('error delete cateagory: ', error);
+      console.log('error delete cateagory: ', error.message);
       throw new HttpException('server error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
   @UseGuards(JwtGuard)
   @ApiBearerAuth()
-  @Put('update-category')
+  @Put('update-category/:id')
   async updateCategory(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateCategoryDto: UpdateCategoryDto,

@@ -1,8 +1,9 @@
+import { UsersService } from 'src/users/users.service';
 import { CreateCategoryDto } from './dtos/create-category.dto';
 import { Category } from './../entities/category.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { UpdateCategoryDto } from './dtos/update-user.dto';
 
 @Injectable()
@@ -20,11 +21,14 @@ export class CategoriesService {
     return await this.categoryRepository.save(createCategoryDto);
   }
 
-  async deleteCategory(id: number): Promise<any> {
+  async deleteCategory(id: number): Promise<DeleteResult> {
     return await this.categoryRepository.delete(id);
   }
 
-  async updateCategory(id: number, updateCategory: UpdateCategoryDto) {
+  async updateCategory(
+    id: number,
+    updateCategory: UpdateCategoryDto,
+  ): Promise<UpdateResult> {
     return await this.categoryRepository.update(id, updateCategory);
   }
 }

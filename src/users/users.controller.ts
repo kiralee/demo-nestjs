@@ -1,3 +1,4 @@
+import { LocalGuard } from './../guard/local.guard';
 import { CreateUserDto } from './dtos/create-user.dto';
 import {
   Body,
@@ -14,7 +15,6 @@ import {
 import { UsersService } from './users.service';
 import { ApiTags } from '@nestjs/swagger';
 import { LoginUserDto } from './dtos/login-user.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from 'src/auth/auth.service';
 
 @ApiTags('users')
@@ -41,7 +41,7 @@ export class UsersController {
     }
   }
 
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(LocalGuard)
   @Post('sign-in')
   async signIn(@Request() req, @Body() loginUserDto: LoginUserDto) {
     try {

@@ -21,4 +21,8 @@ export class User {
   @ManyToMany(() => Permission)
   @JoinTable()
   permissions: Permission[];
+
+  getCustom() {
+    console.log('ABC');
+  }
 }

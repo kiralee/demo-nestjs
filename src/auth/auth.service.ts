@@ -9,7 +9,6 @@ import _ from 'lodash';
 export class AuthService {
   constructor(
     private jwtService: JwtService,
-    @Inject(forwardRef(() => UsersService))
     private readonly usersService: UsersService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
@@ -47,7 +46,7 @@ export class AuthService {
 
     if (findCache) await this.cacheManager.del(user.id);
 
-    await this.cacheManager.set(user.id, token, { ttl: 0 });
+    await this.cacheManager.set(user.id, token, { ttl: 0 }); // default set tll 5second, use tll=0 no limit
 
     return {
       message: 'Login success',
