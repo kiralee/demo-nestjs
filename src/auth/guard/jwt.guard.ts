@@ -1,19 +1,20 @@
 import {
   ExecutionContext,
   Injectable,
+  ForbiddenException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
-let resource: string | number;
-let action: any;
-
 @Injectable()
 export class JwtGuard extends AuthGuard('jwt') {
+  public resource: string;
+  public action: string;
+
   canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
-    resource = request.path?.split('/')[1];
-    action = request.method.toLocaleLowerCase();
+    this.resource = request.path?.split('/')[1];
+    this.action = request.method.toLocaleLowerCase();
     return super.canActivate(context);
   }
 
@@ -23,10 +24,9 @@ export class JwtGuard extends AuthGuard('jwt') {
     }
 
     const permission = user.permission;
-
-    const check = permission?.[resource]?.includes(action);
+    const check = permission?.[this.resource]?.includes(this.action);
     if (!check) {
-      throw new UnauthorizedException('No permission');
+      throw new ForbiddenException('No permission');
     }
     return user;
   }

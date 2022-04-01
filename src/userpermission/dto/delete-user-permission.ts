@@ -1,14 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { CreateUserPermissionDto } from './create-user-permission';
+import { PartialType } from '@nestjs/swagger';
 
-export class DeleteUserPermissionDto {
-  @ApiProperty()
-  @IsNumber()
-  @IsNotEmpty()
-  userId: number;
-
-  @ApiProperty()
-  @IsNumber()
-  @IsNotEmpty()
-  permissionId: number;
-}
+export class DeleteUserPermissionDto extends PartialType(
+  CreateUserPermissionDto,
+) {}

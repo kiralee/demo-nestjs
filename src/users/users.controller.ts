@@ -1,4 +1,4 @@
-import { LocalGuard } from './../guard/local.guard';
+import { ValidationPipe } from './../validation/validation.pipe';
 import { CreateUserDto } from './dtos/create-user.dto';
 import {
   Body,
@@ -18,7 +18,7 @@ import { LoginUserDto } from './dtos/login-user.dto';
 import { AuthService } from 'src/auth/auth.service';
 
 @ApiTags('users')
-@Controller('users')
+@Controller('users') //nhận vào 1 chuỗi nếu k mặt định là /
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
@@ -41,14 +41,24 @@ export class UsersController {
     }
   }
 
-  @UseGuards(LocalGuard)
+  // @UseGuards(LocalGuard)
   @Post('sign-in')
-  async signIn(@Request() req, @Body() loginUserDto: LoginUserDto) {
+  @HttpCode(HttpStatus.OK)
+  async signIn(
+    @Request() req,
+    @Body(new ValidationPipe()) loginUserDto: LoginUserDto,
+  ) {
     try {
-      const user = req.user;
+      // const user = req.user;
+      const user = await this.usersService.signIn(loginUserDto);
+      if (!user)
+        return {
+          message: 'Wrong user or password',
+        };
+      const { password, ...rest } = user;
       return await this.authService.signIn(user);
     } catch (error) {
-      console.log('Error signUp', error);
+      console.log('Error signIp', error);
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }

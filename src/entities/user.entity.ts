@@ -3,9 +3,11 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Permission } from './permission.entity';
+import { Post } from './post.entity';
 
 @Entity()
 export class User {
@@ -22,7 +24,6 @@ export class User {
   @JoinTable()
   permissions: Permission[];
 
-  getCustom() {
-    console.log('ABC');
-  }
+  @ManyToOne(() => Post, (post) => post.user)
+  posts: Post[];
 }

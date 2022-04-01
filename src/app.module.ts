@@ -3,8 +3,8 @@ import { UsersModule } from './users/users.module';
 import { CategoriesModule } from './categories/categories.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
 import { UserPermissionModule } from './userpermission/userpermission.module';
+import { PostModule } from './post/post.module';
 import * as redisStore from 'cache-manager-redis-store';
 
 @Module({
@@ -13,7 +13,7 @@ import * as redisStore from 'cache-manager-redis-store';
       type: 'mysql',
       host: process.env.DATABASE_HOST,
       port: parseInt(process.env.DATABASE_PORT),
-      username: process.env.DATABASE_ROOT,
+      username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       entities: ['dist/**/*.entity{.ts,.js}'],
@@ -29,6 +29,7 @@ import * as redisStore from 'cache-manager-redis-store';
     AuthModule,
     UsersModule,
     UserPermissionModule,
+    PostModule,
   ],
 })
 export class AppModule {}

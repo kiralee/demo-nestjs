@@ -13,7 +13,7 @@ export class UsersService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  async signUp(user: CreateUserDto): Promise<any> {
+  async signUp(user: CreateUserDto): Promise<User> {
     const result = await this.usersRepository.save(user);
     return result;
   }

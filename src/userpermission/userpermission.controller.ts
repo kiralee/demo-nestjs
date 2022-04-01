@@ -17,7 +17,7 @@ import { UserPermissionService } from './userpermission.service';
 import { DeleteUserPermissionDto } from './dto/delete-user-permission';
 
 @ApiTags('userPermission')
-@Controller('userpermission')
+@Controller('user-permission')
 export class UserPermissionController {
   constructor(
     private readonly userPermissionService: UserPermissionService,
@@ -54,6 +54,7 @@ export class UserPermissionController {
         data: result,
       };
     } catch (error) {
+      console.log('Error delete user permission', error);
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }

@@ -16,13 +16,16 @@ export class UserPermissionService {
 
   async addUserPermission(
     createUserPermissionDto: CreateUserPermissionDto,
-  ): Promise<any> {
+  ): Promise<User> {
     const users = await this.userRepositories.findOne({
       where: {
         id: createUserPermissionDto.userId,
       },
       relations: ['permissions'],
     });
+
+    if (!users) throw Error('User not found');
+
     const permission = await this.permissionRepositories.findOne({
       id: createUserPermissionDto.permissionId,
     });
@@ -34,13 +37,17 @@ export class UserPermissionService {
     return await this.userRepositories.save(users);
   }
 
-  async deletePermission(deletePermissionDto: DeleteUserPermissionDto) {
+  async deletePermission(
+    deletePermissionDto: DeleteUserPermissionDto,
+  ): Promise<User> {
     const users = await this.userRepositories.findOne({
       where: {
         id: deletePermissionDto.userId,
       },
       relations: ['permissions'],
     });
+
+    if (!users) throw Error('User not found');
 
     users.permissions = users.permissions.filter((permission) => {
       return permission.id != deletePermissionDto.permissionId;

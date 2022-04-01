@@ -1,4 +1,3 @@
-import { UsersService } from 'src/users/users.service';
 import { CreateCategoryDto } from './dtos/create-category.dto';
 import { Category } from './../entities/category.entity';
 import { InjectRepository } from '@nestjs/typeorm';
