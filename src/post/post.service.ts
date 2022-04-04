@@ -12,7 +12,7 @@ export class PostService {
   ) {}
 
   async getAllPost(): Promise<Post[]> {
-    return await this.postRepositories.find();
+    return await this.postRepositories.find({ relations: ['user'] });
   }
 
   async addPost(createPostDto: CreatePostDto): Promise<Post> {

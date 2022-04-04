@@ -37,9 +37,15 @@ export class Post {
   @Column({ nullable: true })
   publishedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.posts, {
-    eager: true,
+  @Column({
+    name: 'user_id',
+    select: false,
   })
-  // @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+  userId: number;
+
+  @ManyToOne(() => User, {
+    eager: true, //Avoid N+1 problem
+  })
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
   user: User;
 }

@@ -3,7 +3,6 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -18,7 +17,7 @@ export class User {
   @Column({ length: 50 })
   email: string;
 
-  @Column({ length: 50 })
+  @Column({ length: 50, select: false })
   password: string;
 
   @ManyToMany(() => Permission)
