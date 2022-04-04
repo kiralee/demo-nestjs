@@ -1,3 +1,4 @@
+import { userInfo } from 'os';
 import {
   Column,
   Entity,
@@ -36,7 +37,9 @@ export class Post {
   @Column({ nullable: true })
   publishedAt: Date;
 
-  @ManyToOne((type) => User)
-  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+  @ManyToOne(() => User, (user) => user.posts, {
+    eager: true,
+  })
+  // @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
   user: User;
 }
