@@ -26,6 +26,12 @@ export class UserPermissionService {
 
     if (!users) throw Error('User not found');
 
+    const findPermission = users.permissions.find(
+      (value) => value.id == createUserPermissionDto.permissionId,
+    );
+
+    if (findPermission) throw Error('Permission exist');
+
     const permission = await this.permissionRepositories.findOne({
       id: createUserPermissionDto.permissionId,
     });

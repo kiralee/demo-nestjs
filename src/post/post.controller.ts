@@ -1,3 +1,4 @@
+import { UpdatePostDto } from './dtos/updatee-post.dto';
 import {
   Controller,
   HttpCode,
@@ -5,6 +6,7 @@ import {
   HttpStatus,
   Get,
   Post,
+  Put,
   Body,
   HttpException,
   Delete,
@@ -68,6 +70,25 @@ export class PostController {
       };
     } catch (error) {
       console.log('Error addPost', error);
+      throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @UseGuards(JwtGuard)
+  @ApiBearerAuth()
+  @Put('update-post/:id')
+  async updatePost(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updatePostDto: UpdatePostDto,
+  ) {
+    try {
+      const result = await this.postService.updatePost(id, updatePostDto);
+      return {
+        message: 'Update success',
+        data: result,
+      };
+    } catch (error) {
+      console.log('Error update post', error);
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }

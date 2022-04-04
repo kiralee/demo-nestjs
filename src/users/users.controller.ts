@@ -11,11 +11,13 @@ import {
   forwardRef,
   Inject,
   HttpException,
+  Res,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiTags } from '@nestjs/swagger';
 import { LoginUserDto } from './dtos/login-user.dto';
 import { AuthService } from 'src/auth/auth.service';
+import { Response } from 'express';
 
 @ApiTags('users')
 @Controller('users') //nhận vào 1 chuỗi nếu k mặt định là /
@@ -51,14 +53,16 @@ export class UsersController {
     try {
       // const user = req.user;
       const user = await this.usersService.signIn(loginUserDto);
-      if (!user)
-        return {
-          message: 'Wrong user or password',
-        };
+      if (!user) {
+        throw new HttpException('Not found user', HttpStatus.NOT_FOUND);
+      }
       const { password, ...rest } = user;
       return await this.authService.signIn(user);
-    } catch (error) {
-      console.log('Error signIp', error);
+    } catch (error: any) {
+      console.log('Error signIp', error.status);
+      if (error instanceof HttpException) {
+        throw new HttpException(error.getResponse(), error.getStatus());
+      }
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }

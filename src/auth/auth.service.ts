@@ -1,5 +1,11 @@
 import { LoginUserDto } from './../users/dtos/login-user.dto';
-import { CACHE_MANAGER, forwardRef, Inject, Injectable } from '@nestjs/common';
+import {
+  CACHE_MANAGER,
+  forwardRef,
+  Inject,
+  Injectable,
+  Res,
+} from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { Cache } from 'cache-manager';
